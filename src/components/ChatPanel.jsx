@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { marked } from 'marked';
 
 export default function ChatPanel({ apiKey, model, documents }) {
   const [messages, setMessages] = useState([]);
@@ -71,7 +72,11 @@ Provide a clear, structured answer with citations referencing the source documen
         {messages.map((msg, i) => (
           <div key={i} className={`message ${msg.role}`}>
             <div className="message-label">{msg.role === 'user' ? 'You' : 'DIFC Lex'}</div>
-            <div className="message-text">{msg.text}</div>
+            {msg.role === 'assistant' ? (
+              <div className="message-text markdown" dangerouslySetInnerHTML={{ __html: marked(msg.text) }} />
+            ) : (
+              <div className="message-text">{msg.text}</div>
+            )}
           </div>
         ))}
         {loading && <div className="message assistant"><div className="message-text">Analyzing documents...</div></div>}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { marked } from 'marked';
 import ApiKeyInput from './components/ApiKeyInput';
 import Uploader from './components/Uploader';
 import DocList from './components/DocList';
@@ -86,7 +87,7 @@ Document: ${documents[i].text}`;
           {Object.entries(summaries).map(([idx, text]) => (
             <div key={idx} className="summary-card">
               <h4>Summary: {documents[Number(idx)].name}</h4>
-              <div className="summary-text">{text}</div>
+              <div className="summary-text markdown" dangerouslySetInnerHTML={{ __html: marked(text) }} />
             </div>
           ))}
         </div>

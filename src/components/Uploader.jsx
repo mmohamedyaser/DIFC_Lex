@@ -17,7 +17,8 @@ export default function Uploader({ onUpload }) {
       }
       try {
         const text = await extractText(file);
-        onUpload({ name: file.name, text, charCount: text.length });
+        const blobUrl = URL.createObjectURL(file);
+        onUpload({ name: file.name, text, charCount: text.length, blobUrl });
       } catch (err) {
         setError(`Failed to parse "${file.name}": ${err.message}`);
       }

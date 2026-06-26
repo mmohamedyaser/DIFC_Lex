@@ -150,14 +150,39 @@ header h1 {
 
 main {
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 24px;
+  grid-template-columns: 280px 1fr 1fr;
+  gap: 16px;
   height: calc(100vh - 80px);
 }
 
-.sidebar {
+.layout-3pane {
+  display: grid;
+  grid-template-columns: 280px 1fr 1fr;
+  gap: 16px;
+  height: calc(100vh - 80px);
+}
+
+.pane {
   overflow-y: auto;
-  padding-right: 8px;
+}
+
+.pane-left {
+  padding-right: 4px;
+}
+
+.pane-center {
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pane-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-right .chat-panel {
+  flex: 1;
 }
 
 /* Uploader */
@@ -454,6 +479,109 @@ main {
   color: #f87171;
   font-size: 0.85rem;
   padding: 8px 20px;
+}
+
+/* PDF Viewer */
+.pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.pdf-placeholder {
+  text-align: center;
+  color: #64748b;
+  margin-top: 80px;
+  font-size: 0.95rem;
+}
+
+.pdf-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #0f172a;
+  border-bottom: 1px solid #334155;
+  flex-shrink: 0;
+}
+
+.pdf-filename {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
+}
+
+.pdf-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.pdf-controls button {
+  padding: 2px 10px;
+  background: #334155;
+  color: #e2e8f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.pdf-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pdf-pages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.pdf-loading {
+  text-align: center;
+  color: #64748b;
+  margin-top: 40px;
+}
+
+.pdf-page {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.pdf-page canvas {
+  max-width: 100%;
+  height: auto !important;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.pdf-page-num {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* DocList selected state */
+.doc-item {
+  cursor: pointer;
+  transition: border-color 0.15s;
+  border: 2px solid transparent;
+}
+
+.doc-item:hover {
+  border-color: #475569;
+}
+
+.doc-item.selected {
+  border-color: #3b82f6;
+  background: #1a2740;
 }
 
 /* Scrollbar */

@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import ApiKeyInput from './components/ApiKeyInput';
 import Uploader from './components/Uploader';
 import DocList from './components/DocList';
+import PdfViewer from './components/PdfViewer';
 import ChatPanel from './components/ChatPanel';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -10,6 +11,7 @@ export default function App() {
   const [apiKey, setApiKey] = useState('');
   const [model, setModel] = useState('');
   const [documents, setDocuments] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [summarizing, setSummarizing] = useState(null);
   const [summaries, setSummaries] = useState({});
 
@@ -19,7 +21,15 @@ export default function App() {
   };
 
   const handleUpload = (doc) => {
-    setDocuments((prev) => [...prev, doc]);
+    setDocuments((prev) => {
+      const next = [...prev, doc];
+      if (next.length === 1) setSelectedIndex(0);
+      return next;
+    });
+  };
+
+  const handleSelect = (i) => {
+    setSelectedIndex(i);
   };
 
   const handleRemove = (i) => {
@@ -28,6 +38,11 @@ export default function App() {
       const next = { ...prev };
       delete next[i];
       return next;
+    });
+    setSelectedIndex((prev) => {
+      if (prev === null) return null;
+      if (prev === i) return null;
+      return prev > i ? prev - 1 : prev;
     });
   };
 
@@ -59,11 +74,14 @@ Document: ${documents[i].text}`;
     setApiKey('');
     setDocuments([]);
     setSummaries({});
+    setSelectedIndex(null);
   };
 
   if (!apiKey) {
     return <ApiKeyInput onConnect={handleConnect} />;
   }
+
+  const selectedDoc = selectedIndex !== null ? documents[selectedIndex] : null;
 
   return (
     <div className="app">
@@ -75,11 +93,13 @@ Document: ${documents[i].text}`;
         </div>
       </header>
 
-      <main>
-        <div className="sidebar">
+      <main className="layout-3pane">
+        <div className="pane pane-left">
           <Uploader onUpload={handleUpload} />
           <DocList
             documents={documents}
+            selectedIndex={selectedIndex}
+            onSelect={handleSelect}
             onRemove={handleRemove}
             onSummarize={handleSummarize}
             summarizing={summarizing}
@@ -92,7 +112,16 @@ Document: ${documents[i].text}`;
           ))}
         </div>
 
-        <ChatPanel apiKey={apiKey} model={model} documents={documents} />
+        <div className="pane pane-center">
+          <PdfViewer
+            blobUrl={selectedDoc?.blobUrl}
+            fileName={selectedDoc?.name}
+          />
+        </div>
+
+        <div className="pane pane-right">
+          <ChatPanel apiKey={apiKey} model={model} documents={documents} />
+        </div>
       </main>
     </div>
   );

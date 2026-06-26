@@ -1,23 +1,27 @@
-export default function DocList({ documents, onRemove, onSummarize, summarizing }) {
+export default function DocList({ documents, selectedIndex, onSelect, onRemove, onSummarize, summarizing }) {
   if (documents.length === 0) return null;
 
   return (
     <div className="doc-list">
       <h3>Uploaded Documents ({documents.length})</h3>
       {documents.map((doc, i) => (
-        <div key={i} className="doc-item">
+        <div
+          key={i}
+          className={`doc-item ${selectedIndex === i ? 'selected' : ''}`}
+          onClick={() => onSelect(i)}
+        >
           <div className="doc-info">
             <span className="doc-name">{doc.name}</span>
             <span className="doc-chars">{(doc.charCount / 1000).toFixed(1)}K chars</span>
           </div>
           <div className="doc-actions">
             <button
-              onClick={() => onSummarize(i)}
+              onClick={(e) => { e.stopPropagation(); onSummarize(i); }}
               disabled={summarizing === i}
             >
               {summarizing === i ? 'Summarizing...' : 'Summarize'}
             </button>
-            <button className="btn-remove" onClick={() => onRemove(i)}>Remove</button>
+            <button className="btn-remove" onClick={(e) => { e.stopPropagation(); onRemove(i); }}>Remove</button>
           </div>
         </div>
       ))}

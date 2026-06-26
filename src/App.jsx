@@ -55,7 +55,7 @@ export default function App() {
       const genAI = new GoogleGenerativeAI(apiKey);
       const geminiModel = genAI.getGenerativeModel({
         model,
-        systemInstruction: `You are a legal research assistant. Summarize the provided legal document. Include: 1. Court/tribunal name and case reference (if available), 2. Key legal issues, 3. Holdings and reasoning, 4. Notable precedents cited.`,
+        systemInstruction: `You are a legal research assistant. Summarize the provided legal document. Include: 1. Court/tribunal name and case reference (if available), 2. Key legal issues, 3. Holdings and reasoning, 4. Notable precedents cited. CRITICAL: Output ONLY the final summary. Do NOT include your reasoning process, internal notes, draft outlines, keywords, self-corrections, or meta-commentary.`,
       });
 
       const result = await geminiModel.generateContent(documents[i].text);

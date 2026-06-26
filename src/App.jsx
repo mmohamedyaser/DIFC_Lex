@@ -5,6 +5,7 @@ import Uploader from './components/Uploader';
 import DocList from './components/DocList';
 import PdfViewer from './components/PdfViewer';
 import ChatPanel from './components/ChatPanel';
+import SettingsModal from './components/SettingsModal';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [summarizing, setSummarizing] = useState(null);
   const [summaries, setSummaries] = useState({});
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleConnect = (key, modelName) => {
     setApiKey(key);
@@ -89,6 +91,12 @@ Document: ${documents[i].text}`;
         <h1>DIFC Lex</h1>
         <div className="header-info">
           <span>Model: {model}</span>
+          <button className="btn-settings" onClick={() => setShowSettings(true)} title="Settings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
           <button className="btn-disconnect" onClick={handleDisconnect}>Disconnect</button>
         </div>
       </header>
@@ -123,6 +131,15 @@ Document: ${documents[i].text}`;
           <ChatPanel apiKey={apiKey} model={model} documents={documents} />
         </div>
       </main>
+
+      {showSettings && (
+        <SettingsModal
+          apiKey={apiKey}
+          model={model}
+          onModelChange={setModel}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </div>
   );
 }

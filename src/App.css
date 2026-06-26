@@ -148,6 +148,23 @@ header h1 {
   font-size: 0.8rem;
 }
 
+.btn-settings {
+  padding: 4px 8px;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-settings:hover {
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
 main {
   display: grid;
   grid-template-columns: 280px 1fr 1fr;
@@ -582,6 +599,113 @@ main {
 .doc-item.selected {
   border-color: #3b82f6;
   background: #1a2740;
+}
+
+/* Settings Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  position: relative;
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 28px;
+  width: 400px;
+  max-width: 90vw;
+}
+
+.modal h2 {
+  font-size: 1.1rem;
+  color: #f8fafc;
+  margin-bottom: 20px;
+}
+
+.modal label {
+  display: block;
+  text-align: left;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-actions button[type="submit"] {
+  background: #3b82f6;
+  color: #fff;
+  flex: 1;
+}
+
+.modal-actions button[type="submit"]:disabled {
+  background: #475569;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #e2e8f0;
+}
+
+.modal .error {
+  margin-top: 10px;
+  padding: 0;
 }
 
 /* Scrollbar */

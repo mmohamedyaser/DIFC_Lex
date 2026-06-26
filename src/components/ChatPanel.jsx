@@ -29,7 +29,9 @@ export default function ChatPanel({ apiKey, model, documents }) {
       const genAI = new GoogleGenerativeAI(apiKey);
       const geminiModel = genAI.getGenerativeModel({
         model,
-        systemInstruction: `You are a legal research assistant specializing in DIFC (Dubai International Financial Centre) and ADGM (Abu Dhabi Global Market) law. Analyze the provided legal documents and answer the user's question. Cite specific documents and quote relevant passages. If the documents don't contain enough information to answer fully, say so. Format citations as: [Document: "filename"] followed by the relevant quote.`,
+        systemInstruction: `You are a legal research assistant specializing in DIFC (Dubai International Financial Centre) and ADGM (Abu Dhabi Global Market) law. Analyze the provided legal documents and answer the user's question. Cite specific documents and quote relevant passages. If the documents don't contain enough information to answer fully, say so. Format citations as: [Document: "filename"] followed by the relevant quote.
+
+CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, internal notes, draft outlines, keywords, self-corrections, meta-commentary, or any text describing how you are constructing the response. Start directly with the answer.`,
       });
 
       const userContent = `DOCUMENTS:\n${buildContext()}\n\nUSER QUESTION: ${question}`;

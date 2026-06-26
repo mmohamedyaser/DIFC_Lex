@@ -53,17 +53,12 @@ export default function App() {
     setSummarizing(i);
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const geminiModel = genAI.getGenerativeModel({ model });
+      const geminiModel = genAI.getGenerativeModel({
+        model,
+        systemInstruction: `You are a legal research assistant. Summarize the provided legal document. Include: 1. Court/tribunal name and case reference (if available), 2. Key legal issues, 3. Holdings and reasoning, 4. Notable precedents cited.`,
+      });
 
-      const prompt = `Summarize the following legal document. Include:
-1. Court/tribunal name and case reference (if available)
-2. Key legal issues
-3. Holdings and reasoning
-4. Notable precedents cited
-
-Document: ${documents[i].text}`;
-
-      const result = await geminiModel.generateContent(prompt);
+      const result = await geminiModel.generateContent(documents[i].text);
       setSummaries((prev) => ({ ...prev, [i]: result.response.text() }));
     } catch (err) {
       setSummaries((prev) => ({ ...prev, [i]: `Error: ${err.message}` }));

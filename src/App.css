@@ -347,6 +347,50 @@ main {
   }
 }
 
+/* Search tips */
+.search-tips {
+  margin-top: 20px;
+  padding: 12px 14px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+}
+
+.search-tips-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.search-tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.search-tips-list li {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.search-tips-list li::before {
+  content: '\2192';
+  margin-right: 6px;
+  color: #475569;
+}
+
+.search-tips-list code {
+  background: #1e293b;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #93c5fd;
+}
+
 /* DocList */
 .doc-list {
   margin-top: 20px;

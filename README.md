@@ -1,14 +1,25 @@
-# DIFC Lex — Legal Precedent Navigator
+# DIFC Lex
 
-Single-page React app for querying DIFC/ADGM legal PDFs via Gemini API. Upload court judgments, arbitration rulings, and regulatory circulars, then ask questions with cited answers. Everything session-only — no storage, no server.
+Legal precedent navigator for DIFC and ADGM jurisdictions. Upload court judgments, arbitration rulings, and regulatory circulars as PDFs. Ask natural-language questions and get answers with specific citations and quoted passages — all client-side, nothing stored.
 
-## How it works
+## Quick start
 
-1. Enter your Gemini API key — app fetches available models from the API
-2. Upload DIFC/ADGM legal PDFs — parsed client-side via pdfjs-dist
-3. Ask questions — full document context sent to Gemini, answers returned with citations
-4. Summarize any document with one click
-5. Close tab — everything gone
+1. Get a [Gemini API key](https://aistudio.google.com/apikey) (free tier works)
+2. Open the app, enter your key, pick a model
+3. Upload a legal PDF or load one of the built-in examples
+4. Ask a question or click Summarize
+5. Close the tab when done — everything disappears
+
+## Finding legal documents
+
+DIFC and ADGM publish judgments and rulings publicly. Here's where to look:
+
+- **DIFC Courts judgments**: Search Google for `DIFC Court of First Instance judgment PDF` or `DIFC CFI [year] judgment`
+- **ADGM Courts rulings**: Search for `ADGM Court judgment PDF` or `ADGM arbitration ruling`
+- **DFSA enforcement notices**: Search for `DFSA enforcement action PDF` or `DFSA regulatory decision`
+- **FSRA regulatory circulars**: Search for `FSRA regulatory circular ADGM PDF`
+- **DIFC Employment Law cases**: Search for `DIFC employment judgment wrongful termination PDF`
+- **General search tip**: Add `filetype:pdf` to any Google search to find only PDF documents (e.g. `DIFC judgment filetype:pdf`)
 
 ## Run locally
 
@@ -17,11 +28,9 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`. No `.env` file needed — enter your API key in the app.
+Open `http://localhost:5173`. No `.env` file needed.
 
-## Deploy
-
-### Vercel
+## Deploy to Vercel
 
 Connect this repo to Vercel — auto-detects Vite. No environment variables required.
 
@@ -30,9 +39,13 @@ npm install -g vercel
 vercel
 ```
 
+## Privacy
+
+Your API key and documents never leave your browser. No backend, no database, no tracking. Close the tab and everything is gone.
+
 ## Tech
 
 - React 18 + Vite
 - `@google/generative-ai` — Gemini SDK (browser-side)
-- `pdfjs-dist` — client-side PDF text extraction
-- No backend, no database, no storage
+- `pdfjs-dist` — client-side PDF text extraction and preview
+- `marked` — markdown rendering for AI responses

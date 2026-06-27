@@ -81,6 +81,17 @@ export default function Uploader({ onUpload }) {
           ))}
         </div>
       </div>
+
+      <div className="search-tips">
+        <p className="search-tips-label">Find real legal documents to upload:</p>
+        <ul className="search-tips-list">
+          <li>Search Google for <code>DIFC Court of First Instance judgment PDF</code></li>
+          <li>Search Google for <code>ADGM Court judgment PDF</code></li>
+          <li>Search Google for <code>DFSA enforcement action PDF</code></li>
+          <li>Search Google for <code>FSRA regulatory circular ADGM PDF</code></li>
+          <li>Tip: add <code>filetype:pdf</code> to any Google search to find only PDFs</li>
+        </ul>
+      </div>
     </div>
   );
 }

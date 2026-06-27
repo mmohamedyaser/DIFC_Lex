@@ -8,6 +8,7 @@ export default function DocList({ documents, selectedIndex, onSelect, onRemove, 
         <div
           key={i}
           className={`doc-item ${selectedIndex === i ? 'selected' : ''}`}
+          style={{ '--i': i }}
           role="button"
           tabIndex={0}
           aria-label={`Select ${doc.name}`}

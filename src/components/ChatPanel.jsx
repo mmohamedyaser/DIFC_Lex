@@ -111,7 +111,7 @@ CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, 
             )}
           </div>
         ))}
-        {loading && <div className="message assistant"><div className="message-text">Analyzing documents&hellip;</div></div>}
+        {loading && <div className="message assistant loading-message"><div className="message-text">Analyzing documents&hellip;</div></div>}
       </div>
       {error && (
         <div className="chat-error" role="alert">

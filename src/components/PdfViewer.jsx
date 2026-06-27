@@ -3,7 +3,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
-export default function PdfViewer({ blobUrl, fileName }) {
+export default function PdfViewer({ blobUrl, fileName, text }) {
   const [pages, setPages] = useState([]);
   const [numPages, setNumPages] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -55,15 +55,26 @@ export default function PdfViewer({ blobUrl, fileName }) {
   }, [pages]);
 
   if (!blobUrl) {
+    if (text) {
+      return (
+        <div className="pdf-viewer">
+          <div className="pdf-toolbar">
+            <span className="pdf-filename">{fileName}</span>
+            <span className="pdf-badge">Text only</span>
+          </div>
+          <div className="pdf-pages">
+            <div className="text-document">
+              <pre className="text-document-content">{text}</pre>
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="pdf-viewer">
         <div className="pdf-placeholder">
-          <p className="pdf-placeholder-title">{fileName ? 'Text-only document' : 'No document selected'}</p>
-          <p className="pdf-placeholder-hint">
-            {fileName
-              ? 'This is a text-based example. Upload a PDF to see the original document with full formatting.'
-              : 'Upload a PDF from the left panel, then click it here to preview'}
-          </p>
+          <p className="pdf-placeholder-title">No document selected</p>
+          <p className="pdf-placeholder-hint">Upload a PDF from the left panel, then click it here to preview</p>
         </div>
       </div>
     );

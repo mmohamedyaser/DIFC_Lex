@@ -151,6 +151,7 @@ export default function App() {
           <PdfViewer
             blobUrl={selectedDoc?.blobUrl}
             fileName={selectedDoc?.name}
+            text={selectedDoc?.text}
           />
         </div>
 

@@ -2,6 +2,8 @@
 
 Legal precedent navigator for DIFC and ADGM jurisdictions. Upload court judgments, arbitration rulings, and regulatory circulars as PDFs. Ask natural-language questions and get answers with specific citations and quoted passages — all client-side, nothing stored.
 
+![DIFC Lex screenshot](src/img/Screenshot%202026-06-27%20191739.jpg)
+
 ## Quick start
 
 1. Get a [Gemini API key](https://aistudio.google.com/apikey) (free tier works)

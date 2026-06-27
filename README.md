@@ -23,6 +23,12 @@ DIFC and ADGM publish judgments and rulings publicly. Here's where to look:
 - **DIFC Employment Law cases**: Search for `DIFC employment judgment wrongful termination PDF`
 - **General search tip**: Add `filetype:pdf` to any Google search to find only PDF documents (e.g. `DIFC judgment filetype:pdf`)
 
+### Sample document
+
+Try this real DIFC Small Claims Tribunal judgment:
+
+- [Normand v Nathaniel [2024] DIFC SCT 125](https://www.difccourts.ae/index.php/tools/pdf/sub_default_page?path=/rules-decisions/judgments-orders/small-claims-tribunal/normand-v-nathaniel-2024-difc-sct-125-1) — download the PDF and upload it to DIFC Lex to test.
+
 ## Run locally
 
 ```bash

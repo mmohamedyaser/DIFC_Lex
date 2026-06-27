@@ -36,10 +36,14 @@ export default function Uploader({ onUpload }) {
     <div className="uploader-section">
       <div
         className={`drop-zone ${dragging ? 'dragging' : ''}`}
+        role="button"
+        tabIndex={0}
+        aria-label="Upload PDF documents"
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
         onClick={() => inputRef.current.click()}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputRef.current.click(); } }}
       >
         {loading ? (
           <p>Parsing PDFs...</p>

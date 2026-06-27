@@ -57,7 +57,10 @@ export default function PdfViewer({ blobUrl, fileName }) {
   if (!blobUrl) {
     return (
       <div className="pdf-viewer">
-        <p className="pdf-placeholder">Select a document to preview</p>
+        <div className="pdf-placeholder">
+          <p className="pdf-placeholder-title">No document selected</p>
+          <p className="pdf-placeholder-hint">Upload a PDF from the left panel, then click it here to preview</p>
+        </div>
       </div>
     );
   }

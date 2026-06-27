@@ -2,27 +2,40 @@ import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
 
-export default function ChatPanel({ apiKey, model, documents }) {
+function humanError(err) {
+  const msg = err.message || '';
+  if (msg.includes('403') || msg.includes('401') || msg.includes('API key')) return 'API key is invalid or expired. Check your key in Settings.';
+  if (msg.includes('429')) return 'Rate limited by Gemini API. Wait a moment and try again.';
+  if (msg.includes('500') || msg.includes('503')) return 'Gemini API is temporarily unavailable. Try again in a few seconds.';
+  if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return 'Network error. Check your connection and try again.';
+  if (msg.includes('timeout') || msg.includes('Timeout')) return 'Request timed out. The documents may be too large — try with fewer documents.';
+  return `Something went wrong: ${msg}`;
+}
+
+export default function ChatPanel({ apiKey, model, documents, onFirstMessage }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [lastQuestion, setLastQuestion] = useState('');
   const chatRef = useRef();
 
   useEffect(() => {
     chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
-  }, [messages]);
+  }, [messages, loading, error]);
 
   const buildContext = () =>
     documents.map((d) => `--- DOCUMENT: ${d.name} ---\n${d.text}`).join('\n\n');
 
-  const sendMessage = async () => {
-    const question = input.trim();
+  const sendMessage = async (questionOverride) => {
+    const question = (questionOverride || input).trim();
     if (!question || loading) return;
 
-    setInput('');
+    if (!questionOverride) setInput('');
     setError('');
+    setLastQuestion(question);
     setMessages((prev) => [...prev, { role: 'user', text: question }]);
+    if (onFirstMessage) onFirstMessage();
     setLoading(true);
 
     try {
@@ -35,14 +48,12 @@ CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, 
       });
 
       const userContent = `DOCUMENTS:\n${buildContext()}\n\nUSER QUESTION: ${question}`;
-
       const result = await geminiModel.generateContent(userContent);
-      const response = result.response;
-      const text = response.text();
+      const text = result.response.text();
 
       setMessages((prev) => [...prev, { role: 'assistant', text }]);
     } catch (err) {
-      setError(err.message || 'Query failed');
+      setError(humanError(err));
     } finally {
       setLoading(false);
     }
@@ -57,7 +68,7 @@ CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, 
 
   return (
     <div className="chat-panel">
-      <div className="chat-messages" ref={chatRef}>
+      <div className="chat-messages" ref={chatRef} role="log" aria-live="polite" aria-label="Chat messages">
         {messages.length === 0 && (
           <p className="chat-placeholder">
             Ask a question about your uploaded legal documents.
@@ -75,19 +86,29 @@ CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, 
             )}
           </div>
         ))}
-        {loading && <div className="message assistant"><div className="message-text">Analyzing documents...</div></div>}
+        {loading && <div className="message assistant"><div className="message-text">Analyzing documents&hellip;</div></div>}
       </div>
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <div className="chat-error" role="alert">
+          <p>{error}</p>
+          <button onClick={() => { setError(''); sendMessage(lastQuestion); }}>Retry</button>
+        </div>
+      )}
       <div className="chat-input-row">
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={documents.length === 0 ? 'Upload documents to begin...' : 'Ask a legal question...'}
+          placeholder={documents.length === 0 ? 'Upload documents to begin\u2026' : 'Ask a legal question\u2026'}
           rows={2}
           disabled={documents.length === 0}
+          aria-label="Your question"
         />
-        <button onClick={sendMessage} disabled={loading || !input.trim() || documents.length === 0}>
+        <button
+          onClick={() => sendMessage()}
+          disabled={loading || !input.trim() || documents.length === 0}
+          aria-label="Send question"
+        >
           Send
         </button>
       </div>

@@ -61,7 +61,7 @@ export default function SettingsModal({ apiKey, model, onModelChange, onClose })
           </div>
           {error && <p className="error">{error}</p>}
         </form>
-        <button className="modal-close" onClick={onClose}>&times;</button>
+        <button className="modal-close" onClick={onClose} aria-label="Close settings">&times;</button>
       </div>
     </div>
   );

@@ -44,6 +44,24 @@ export default function ApiKeyInput({ onConnect }) {
       <h1>DIFC Lex</h1>
       <p className="subtitle">Legal Precedent Navigator — DIFC & ADGM</p>
 
+      <div className="welcome-intro">
+        <p>Upload DIFC court judgments, ADGM arbitration rulings, and regulatory circulars. Ask natural-language questions and get answers with <strong>specific citations</strong> and quoted passages from your documents.</p>
+        <div className="welcome-steps">
+          <div className="welcome-step">
+            <span className="welcome-step-num">1</span>
+            <span>Upload PDF judgments</span>
+          </div>
+          <div className="welcome-step">
+            <span className="welcome-step-num">2</span>
+            <span>Ask legal questions</span>
+          </div>
+          <div className="welcome-step">
+            <span className="welcome-step-num">3</span>
+            <span>Get cited answers</span>
+          </div>
+        </div>
+      </div>
+
       {!fetched ? (
         <form onSubmit={fetchModels}>
           <label>Gemini API Key</label>

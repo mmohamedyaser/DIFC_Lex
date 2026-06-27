@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
 
@@ -12,7 +12,7 @@ function humanError(err) {
   return `Something went wrong: ${msg}`;
 }
 
-export default function ChatPanel({ apiKey, model, documents, onFirstMessage }) {
+const ChatPanel = forwardRef(function ChatPanel({ apiKey, model, documents, onFirstMessage }, ref) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -58,6 +58,31 @@ CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, 
       setLoading(false);
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    summarizeDocument: async (doc) => {
+      if (loading) return;
+      setError('');
+      setMessages((prev) => [...prev, { role: 'user', text: `Summarize: ${doc.name}` }]);
+      if (onFirstMessage) onFirstMessage();
+      setLoading(true);
+
+      try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const geminiModel = genAI.getGenerativeModel({
+          model,
+          systemInstruction: `You are a legal research assistant. Summarize the provided legal document. Include: 1. Court/tribunal name and case reference (if available), 2. Key legal issues, 3. Holdings and reasoning, 4. Notable precedents cited. CRITICAL: Output ONLY the final summary. Do NOT include your reasoning process, internal notes, draft outlines, keywords, self-corrections, or meta-commentary.`,
+        });
+
+        const result = await geminiModel.generateContent(doc.text);
+        setMessages((prev) => [...prev, { role: 'assistant', text: result.response.text() }]);
+      } catch (err) {
+        setError(humanError(err));
+      } finally {
+        setLoading(false);
+      }
+    },
+  }), [apiKey, model, loading, onFirstMessage]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -114,4 +139,6 @@ CRITICAL: Output ONLY your final answer. Do NOT include your reasoning process, 
       </div>
     </div>
   );
-}
+});
+
+export default ChatPanel;

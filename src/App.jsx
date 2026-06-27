@@ -1,12 +1,10 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { marked } from 'marked';
+import { useState, useRef, useEffect } from 'react';
 import ApiKeyInput from './components/ApiKeyInput';
 import Uploader from './components/Uploader';
 import DocList from './components/DocList';
 import PdfViewer from './components/PdfViewer';
 import ChatPanel from './components/ChatPanel';
 import SettingsModal from './components/SettingsModal';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default function App() {
   const [apiKey, setApiKey] = useState('');
@@ -14,12 +12,12 @@ export default function App() {
   const [documents, setDocuments] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [summarizing, setSummarizing] = useState(null);
-  const [summaries, setSummaries] = useState({});
   const [showSettings, setShowSettings] = useState(false);
   const [removedDoc, setRemovedDoc] = useState(null);
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const undoTimer = useRef(null);
+  const chatRef = useRef(null);
 
   useEffect(() => {
     return () => { if (undoTimer.current) clearTimeout(undoTimer.current); };
@@ -46,11 +44,6 @@ export default function App() {
     const doc = documents[i];
     setRemovedDoc({ doc, index: i });
     setDocuments((prev) => prev.filter((_, idx) => idx !== i));
-    setSummaries((prev) => {
-      const next = { ...prev };
-      delete next[i];
-      return next;
-    });
     setSelectedIndex((prev) => {
       if (prev === null) return null;
       if (prev === i) return null;
@@ -71,30 +64,18 @@ export default function App() {
     if (undoTimer.current) clearTimeout(undoTimer.current);
   };
 
-  const handleSummarize = async (i) => {
-    if (summarizing === i) return;
+  const handleSummarize = (i) => {
+    if (summarizing === i || !chatRef.current) return;
     setSummarizing(i);
-    try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const geminiModel = genAI.getGenerativeModel({
-        model,
-        systemInstruction: `You are a legal research assistant. Summarize the provided legal document. Include: 1. Court/tribunal name and case reference (if available), 2. Key legal issues, 3. Holdings and reasoning, 4. Notable precedents cited. CRITICAL: Output ONLY the final summary. Do NOT include your reasoning process, internal notes, draft outlines, keywords, self-corrections, or meta-commentary.`,
-      });
-
-      const result = await geminiModel.generateContent(documents[i].text);
-      setSummaries((prev) => ({ ...prev, [i]: result.response.text() }));
-      setShowHint(false);
-    } catch (err) {
-      setSummaries((prev) => ({ ...prev, [i]: `Error: ${err.message}` }));
-    } finally {
+    setShowHint(false);
+    chatRef.current.summarizeDocument(documents[i]).finally(() => {
       setSummarizing(null);
-    }
+    });
   };
 
   const handleDisconnect = () => {
     setApiKey('');
     setDocuments([]);
-    setSummaries({});
     setSelectedIndex(null);
     setShowDisconnectConfirm(false);
   };
@@ -139,12 +120,6 @@ export default function App() {
             onSummarize={handleSummarize}
             summarizing={summarizing}
           />
-          {Object.entries(summaries).map(([idx, text]) => (
-            <div key={idx} className="summary-card">
-              <h4>Summary: {documents[Number(idx)].name}</h4>
-              <div className="summary-text markdown" dangerouslySetInnerHTML={{ __html: marked(text) }} />
-            </div>
-          ))}
         </div>
 
         <div className="pane pane-center">
@@ -162,7 +137,7 @@ export default function App() {
               <button onClick={() => setShowHint(false)} aria-label="Dismiss hint">&times;</button>
             </div>
           )}
-          <ChatPanel apiKey={apiKey} model={model} documents={documents} onFirstMessage={() => setShowHint(false)} />
+          <ChatPanel ref={chatRef} apiKey={apiKey} model={model} documents={documents} onFirstMessage={() => setShowHint(false)} />
         </div>
       </main>
 

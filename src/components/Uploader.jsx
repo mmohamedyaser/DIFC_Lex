@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { extractText } from '../utils/pdfParser';
+import EXAMPLES from '../data/examples';
 
 export default function Uploader({ onUpload }) {
   const [dragging, setDragging] = useState(false);
@@ -24,6 +25,10 @@ export default function Uploader({ onUpload }) {
       }
     }
     setLoading(false);
+  };
+
+  const loadExample = (example) => {
+    onUpload({ name: example.name, text: example.text, charCount: example.text.length, blobUrl: null });
   };
 
   const handleDrop = (e) => {
@@ -60,6 +65,22 @@ export default function Uploader({ onUpload }) {
         onChange={(e) => processFiles(e.target.files)}
       />
       {error && <p className="error">{error}</p>}
+
+      <div className="examples-section">
+        <p className="examples-label">No documents? Try an example case:</p>
+        <div className="examples-buttons">
+          {EXAMPLES.map((ex, i) => (
+            <button
+              key={i}
+              className="btn-example"
+              onClick={() => loadExample(ex)}
+              aria-label={`Load example: ${ex.name}`}
+            >
+              {ex.name}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

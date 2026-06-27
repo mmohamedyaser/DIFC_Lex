@@ -58,8 +58,12 @@ export default function PdfViewer({ blobUrl, fileName }) {
     return (
       <div className="pdf-viewer">
         <div className="pdf-placeholder">
-          <p className="pdf-placeholder-title">No document selected</p>
-          <p className="pdf-placeholder-hint">Upload a PDF from the left panel, then click it here to preview</p>
+          <p className="pdf-placeholder-title">{fileName ? 'Text-only document' : 'No document selected'}</p>
+          <p className="pdf-placeholder-hint">
+            {fileName
+              ? 'This is a text-based example. Upload a PDF to see the original document with full formatting.'
+              : 'Upload a PDF from the left panel, then click it here to preview'}
+          </p>
         </div>
       </div>
     );

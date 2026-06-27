@@ -303,6 +303,50 @@ main {
   background: #1e293b;
 }
 
+/* Example cases */
+.examples-section {
+  margin-top: 16px;
+}
+
+.examples-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.examples-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.btn-example {
+  width: 100%;
+  padding: 8px 12px;
+  background: #0f172a;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.4;
+  transition: border-color 160ms var(--ease-out), color 160ms var(--ease-out), transform 160ms var(--ease-out);
+  touch-action: manipulation;
+  white-space: normal;
+}
+
+.btn-example:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-example:hover {
+    border-color: #3b82f6;
+    color: #e2e8f0;
+  }
+}
+
 /* DocList */
 .doc-list {
   margin-top: 20px;
